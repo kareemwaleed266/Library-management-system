@@ -78,7 +78,7 @@
         if (!id) return alert("No book ID provided.");
 
         const res = await fetchWithAuth(
-          `http://libraryms.runasp.net/api/Book/GetBook/${id}`
+          `https://libraryms.runasp.net/api/Book/GetBook/${id}`
         );
         if (!res.ok) return alert("Failed to load book.");
         const book = await res.json();
@@ -140,7 +140,7 @@
       async function deleteBook(id) {
         if (!confirm("Delete this book?")) return;
         const res = await fetchWithAuth(
-          `http://libraryms.runasp.net/api/Book/DeleteBook/${id}`,
+          `https://libraryms.runasp.net/api/Book/DeleteBook/${id}`,
           { method: "DELETE" }
         );
         if (res.ok) window.location.href = "index.html";
@@ -152,7 +152,7 @@
         if (!email) return alert("Not logged in");
 
         const res = await fetchWithAuth(
-          `http://libraryms.runasp.net/api/Transaction/BorrowBook/${id}`,
+          `https://libraryms.runasp.net/api/Transaction/BorrowBook/${id}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -175,7 +175,7 @@
         if (!email) return alert("Not logged in");
 
         const res = await fetchWithAuth(
-          `http://libraryms.runasp.net/api/Transaction/BuyBook/${id}`,
+          `https://libraryms.runasp.net/api/Transaction/BuyBook/${id}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

@@ -97,7 +97,7 @@
         try {
           const token = localStorage.getItem("accessToken");
           const response = await fetchWithAuth(
-            "http://libraryms.runasp.net/api/Book/GetAllBooksAsync" //0
+            "https://libraryms.runasp.net/api/Book/GetAllBooksAsync" //0
           );
           const books = await response.json();
           allBooks = books;
@@ -149,7 +149,7 @@
         try {
           const token = localStorage.getItem("accessToken");
           const response = await fetchWithAuth(
-            `http://libraryms.runasp.net/api/Book/DeleteBook/${bookId}`,
+            `https://libraryms.runasp.net/api/Book/DeleteBook/${bookId}`,
             {
               method: "DELETE",
             }
