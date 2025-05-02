@@ -96,13 +96,8 @@
       async function fetchBooks() {
         try {
           const token = localStorage.getItem("accessToken");
-          const response = await fetch(
-            "http://libraryms.runasp.net/api/Book/GetAllBooksAsync",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          const response = await fetchWithAuth(
+            "http://libraryms.runasp.net/api/Book/GetAllBooksAsync" //0
           );
           const books = await response.json();
           allBooks = books;
@@ -153,13 +148,10 @@
 
         try {
           const token = localStorage.getItem("accessToken");
-          const response = await fetch(
+          const response = await fetchWithAuth(
             `http://libraryms.runasp.net/api/Book/DeleteBook/${bookId}`,
             {
               method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
             }
           );
 

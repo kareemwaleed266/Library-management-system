@@ -1,113 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login | Library Management System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-
-  <!-- Navbar -->
-  <nav class="bg-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center">
-          <img src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png" alt="Logo" class="h-10 w-10 mr-2">
-          <span class="font-bold text-xl text-blue-600">LibraryMS</span>
-        </div>
-        <div class="flex space-x-4">
-          <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login | Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+              alt="Logo"
+              class="h-10 w-10 mr-2"
+            />
+            <span class="font-bold text-xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              >Home</a
+            >
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <!-- Login Form -->
-  <main class="flex-grow flex items-center justify-center p-6">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Login to Your Account</h2>
+    <!-- Login Form -->
+    <main class="flex-grow flex items-center justify-center p-6">
+      <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">
+          Login to Your Account
+        </h2>
 
-      <form id="loginForm" class="space-y-4">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input type="email" id="email" name="email" required
-            class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        </div>
-
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-          <input type="password" id="password" name="password" required
-            class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input id="remember" name="remember" type="checkbox"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-            <label for="remember" class="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
+        <form id="loginForm" class="space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
-          <div class="text-sm">
-            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-              Forgot password?
-            </a>
+
+          <div>
+            <label
+              for="password"
+              class="block text-sm font-medium text-gray-700"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            />
           </div>
-        </div>
 
-        <button type="submit"
-          class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
-          Sign In
-        </button>
-      </form>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label for="remember" class="ml-2 block text-sm text-gray-900">
+                Remember me
+              </label>
+            </div>
+            <div class="text-sm">
+              <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                Forgot password?
+              </a>
+            </div>
+          </div>
 
-      <p class="text-center text-sm text-gray-600 mt-6">
-        Don't have an account?
-        <a href="register.html" class="font-medium text-blue-600 hover:text-blue-500">Register now</a>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-600 mt-6">
+          Don't have an account?
+          <a
+            href="register.html"
+            class="font-medium text-blue-600 hover:text-blue-500"
+            >Register now</a
+          >
+        </p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 shadow-inner">
+      <p class="text-gray-500 text-sm">
+        © 2025 LibraryMS. All rights reserved.
       </p>
-    </div>
-  </main>
+    </footer>
 
-  <!-- Footer -->
-  <footer class="bg-white text-center py-4 shadow-inner">
-    <p class="text-gray-500 text-sm">© 2025 LibraryMS. All rights reserved.</p>
-  </footer>
+    <!-- JavaScript to Handle Form Submit -->
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
 
-  <!-- JavaScript to Handle Form Submit -->
-  <script>
-    document.getElementById('loginForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+          // Basic validation
+          if (!email || !password) {
+            alert("Please enter both email and password");
+            return;
+          }
 
-      // Basic validation
-      if (!email || !password) {
-        alert('Please enter both email and password');
-        return;
-      }
+          const response = await fetchWithAuth(
+            "https://libraryms.runasp.net/api/Account/Login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            }
+          );
 
-      const response = await fetch('http://libraryms.runasp.net/api/Account/Login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
+          const data = await response.json();
+          if (response.ok) {
+            // Store token in localStorage
+            localStorage.setItem("accessToken", data.token);
+            localStorage.setItem("isAdmin", data.isAdmin);
 
-      const data = await response.json();
-      if (response.ok) {
-        // Store token in localStorage
-        localStorage.setItem("accessToken", data.token);
-        localStorage.setItem('isAdmin', data.isAdmin);
-
-        alert('Login successful!');
-        window.location.href = 'books.html'; // إعادة توجيه المستخدم إلى صفحة الكتب
-      } else {
-        alert(data.message || 'Login failed! Please check your credentials.');
-      }
-    });
-  </script>
-
-</body>
+            alert("Login successful!");
+            window.location.href = "books.html"; // إعادة توجيه المستخدم إلى صفحة الكتب
+          } else {
+            alert(
+              data.message || "Login failed! Please check your credentials."
+            );
+          }
+        });
+    </script>
+  </body>
 </html>

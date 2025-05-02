@@ -64,14 +64,31 @@
     }, 3000);
   </script> -->
     <script>
-      const isAuthorized = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("accessToken");
 
-      if (!isAuthorized) {
-        alert("Unauthorized access. You are being redirected.");
+      if (!accessToken) {
+        alert("Unauthorized access. Redirecting to login...");
         window.location.href = "login.html";
-      }
+      } else {
+        fetchWithAuth("https://libraryms.runasp.net/api/Account/Logout", {
+          method: "POST",
+        })
+          .then(async (response) => {
+            const data = await response.json(); // اقرأ الرسالة من JSON
 
-      localStorage.clear();
+            if (response.ok) {
+              localStorage.clear();
+              alert(data.message || "Logout successful."); // عرض الرسالة من السيرفر
+              window.location.href = "login.html";
+            } else {
+              alert(data.message || "Logout failed. Please try again.");
+            }
+          })
+          .catch((error) => {
+            console.error("Logout error:", error);
+            alert("Error during logout. Please check your connection.");
+          });
+      }
     </script>
   </body>
 </html>
