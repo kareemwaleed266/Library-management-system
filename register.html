@@ -88,7 +88,7 @@
         © 2025 LibraryMS. All rights reserved.
       </p>
     </footer>
-
+    <script src="js/auth.js"></script>
     <script>
       document
         .getElementById("registerForm")
@@ -112,7 +112,7 @@
           }
 
           const payload = { username, email, password };
-          const res = await fetch(
+          const res = await fetchWithAuth(
             "https://libraryms.runasp.net/api/Account/Register",
             {
               method: "POST",
