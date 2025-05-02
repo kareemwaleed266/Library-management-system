@@ -94,12 +94,12 @@
         .getElementById("registerForm")
         .addEventListener("submit", async (e) => {
           e.preventDefault();
-          const username = e.target.username.value;
+          const userName = e.target.userName.value;
           const email = e.target.email.value;
           const password = e.target.password.value;
 
           // Basic validation
-          if (!username || !email || !password) {
+          if (!userName || !email || !password) {
             alert("Please fill in all fields");
             return;
           }
