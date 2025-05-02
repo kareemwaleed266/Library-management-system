@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Update Book | LibraryMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+              alt="Logo"
+              class="h-10 w-10 mr-2"
+            />
+            <span class="font-bold text-xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              >Home</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Update Book Form -->
+    <main class="flex-grow p-6">
+      <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Update Book</h1>
+        <form id="updateBookForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700">Title</label>
+            <input
+              type="text"
+              id="title"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Author</label>
+            <input
+              type="text"
+              id="author"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Category</label>
+            <input
+              type="text"
+              id="categoryName"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Publisher Name</label>
+            <input
+              type="text"
+              id="publisherName"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Price</label>
+            <input
+              type="number"
+              id="price"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+              step="0.01"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
+          >
+            Update Book
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 shadow-inner">
+      <p class="text-gray-500 text-sm">
+        © 2025 LibraryMS. All rights reserved.
+      </p>
+    </footer>
+
+    <!-- 1) أولاً حمّل auth.js -->
+    <script src="js/auth.js"></script>
+    <script>
+      // 2) تحقق من صلاحيات الدخول والأدمن
+      const token = localStorage.getItem("accessToken");
+      const isAdmin = localStorage.getItem("isAdmin") === "true";
+      if (!token || !isAdmin) {
+        alert("Unauthorized. Redirecting.");
+        window.location.href = "login.html";
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const bookId = params.get("id");
+      if (!bookId) {
+        alert("No book ID provided.");
+        window.location.href = "books.html";
+      }
+
+      // 3) تحميل بيانات الكتاب باستخدام fetchWithAuth
+      async function loadBookDetails() {
+        try {
+          const res = await fetchWithAuth(
+            `http://libraryms.runasp.net/api/Book/GetBook/${bookId}`
+          );
+          if (!res.ok) throw new Error("Failed to load");
+          const book = await res.json();
+          document.getElementById("title").value = book.title;
+          document.getElementById("author").value = book.author;
+          document.getElementById("categoryName").value = book.categoryName;
+          document.getElementById("publisherName").value = book.publisherName;
+          document.getElementById("price").value = book.price;
+        } catch (err) {
+          console.error(err);
+          alert("Could not load book details.");
+          window.location.href = "books.html";
+        }
+      }
+
+      // 4) إرسال التحديث باستخدام fetchWithAuth
+      document
+        .getElementById("updateBookForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const payload = JSON.parse(atob(token.split(".")[1]));
+          const updated = {
+            userEmail: payload.email,
+            title: document.getElementById("title").value.trim(),
+            author: document.getElementById("author").value.trim(),
+            categoryName: document.getElementById("categoryName").value.trim(),
+            publisherName: document
+              .getElementById("publisherName")
+              .value.trim(),
+            price: parseFloat(document.getElementById("price").value),
+          };
+
+          try {
+            const res = await fetchWithAuth(
+              `http://libraryms.runasp.net/api/Book/${bookId}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(updated),
+              }
+            );
+            if (res.ok) {
+              alert("Book updated!");
+              window.location.href = "books.html";
+            } else {
+              const err = await res.json();
+              alert("Update failed: " + (err.message || "Unknown"));
+            }
+          } catch (err) {
+            console.error(err);
+            alert("Error updating book.");
+          }
+        });
+
+      // 5) شغّل التحميل أولاً
+      window.addEventListener("DOMContentLoaded", loadBookDetails);
+    </script>
+  </body>
+</html>

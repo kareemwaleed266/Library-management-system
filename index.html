@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+              alt="Logo"
+              class="h-10 w-10 mr-2"
+            />
+            <span class="font-bold text-xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex space-x-4" id="nav-links">
+            <!-- الروابط تتغير بناءً على ما إذا كان المستخدم مسجل دخوله أم لا -->
+            <a
+              href="login.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              id="login-link"
+              >Login</a
+            >
+            <a
+              href="register.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              id="register-link"
+              >Register</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center text-center px-4">
+      <div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+          Welcome to the Library Management System
+        </h1>
+        <p class="text-gray-600 text-lg mb-8">
+          Manage your library's books and users efficiently and effortlessly.
+        </p>
+        <a
+          href="books.html"
+          id="exploreBtn"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300"
+        >
+          Explore Books
+        </a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 shadow-inner">
+      <p class="text-gray-500 text-sm">
+        © 2025 LibraryMS. All rights reserved.
+      </p>
+    </footer>
+
+    <!-- Auth Logic -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("accessToken"); // الحصول على التوكن من localStorage
+        const nav = document.getElementById("nav-links");
+        const exploreBtn = document.getElementById("exploreBtn");
+        const loginLink = document.getElementById("login-link");
+        const registerLink = document.getElementById("register-link");
+
+        // إذا كان التوكن موجودًا
+        if (token) {
+          // تغيير روابط Navbar إلى Logout
+          nav.innerHTML = `
+          <a href="logout.html" id="logoutBtn" class="text-gray-700 hover:text-red-600 font-medium">Logout</a>
+        `;
+
+          // إضافة وظيفة الـ Logout
+          document.getElementById("logoutBtn").addEventListener("click", () => {
+            localStorage.removeItem("accessToken"); // حذف التوكن من localStorage
+            window.location.href = "index.html"; // العودة للصفحة الرئيسية
+          });
+
+          // تغيير رابط Explore Books ليتيح الدخول مباشرة إذا كان مسجلاً
+          exploreBtn.addEventListener("click", () => {
+            window.location.href = "books.html"; // الانتقال إلى صفحة الكتب
+          });
+
+          // إخفاء روابط التسجيل وتسجيل الدخول
+          loginLink.style.display = "none";
+          registerLink.style.display = "none";
+        } else {
+          // منع الوصول إلى صفحة الكتب إذا لم يكن مسجل دخول
+          exploreBtn.addEventListener("click", (e) => {
+            e.preventDefault(); // إيقاف تنفيذ الرابط
+            alert("You must be logged in to view books.");
+            window.location.href = "login.html"; // إعادة توجيه المستخدم لتسجيل الدخول
+          });
+
+          // إظهار روابط تسجيل الدخول والتسجيل فقط إذا لم يكن المستخدم مسجلًا
+          loginLink.style.display = "inline";
+          registerLink.style.display = "inline";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Book | LibraryMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+              alt="Logo"
+              class="h-10 w-10 mr-2"
+            />
+            <span class="font-bold text-xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              >Home</a
+            >
+            <button
+              onclick="logout()"
+              class="text-red-600 hover:text-red-800 font-medium"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Add Book Form -->
+    <main class="flex-grow p-6">
+      <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Add New Book</h1>
+        <form id="addBookForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700">Title</label>
+            <input
+              type="text"
+              id="title"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Author</label>
+            <input
+              type="text"
+              id="author"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Category</label>
+            <input
+              type="text"
+              id="categoryName"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Publisher Name</label>
+            <input
+              type="text"
+              id="publisherName"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label class="block text-gray-700">Price</label>
+            <input
+              type="number"
+              id="price"
+              required
+              class="mt-1 p-2 w-full border rounded-md focus:ring focus:ring-blue-300"
+              step="0.01"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Add Book
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 shadow-inner">
+      <p class="text-gray-500 text-sm">
+        © 2025 LibraryMS. All rights reserved.
+      </p>
+    </footer>
+
+    <!-- تحميل auth.js أولاً -->
+    <script src="js/auth.js"></script>
+    <script>
+      // تحقق من توكن الدخول وصلاحية الأدمن
+      const token = localStorage.getItem("accessToken");
+      const isAdmin = localStorage.getItem("isAdmin") === "true";
+      if (!token) {
+        alert("Unauthorized. Redirecting to login.");
+        window.location.href = "login.html";
+      } else if (!isAdmin) {
+        alert("Admins only. Redirecting to books.");
+        window.location.href = "books.html";
+      }
+
+      function logout() {
+        window.location.href = "logout.html";
+      }
+
+      function parseJwt(token) {
+        try {
+          const base64 = token.split(".")[1];
+          return JSON.parse(atob(base64));
+        } catch {
+          return null;
+        }
+      }
+
+      document
+        .getElementById("addBookForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const payload = parseJwt(localStorage.getItem("accessToken"));
+          const userEmail = payload?.email;
+          if (!userEmail) {
+            alert("Invalid session. Please login again.");
+            window.location.href = "login.html";
+            return;
+          }
+
+          const book = {
+            userEmail,
+            title: document.getElementById("title").value.trim(),
+            author: document.getElementById("author").value.trim(),
+            categoryName: document.getElementById("categoryName").value.trim(),
+            publisherName: document
+              .getElementById("publisherName")
+              .value.trim(),
+            price: parseFloat(document.getElementById("price").value),
+          };
+
+          try {
+            const response = await fetchWithAuth(
+              "http://libraryms.runasp.net/api/Book/AddBookAsync",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(book),
+              }
+            );
+
+            if (response.ok) {
+              alert("Book added successfully!");
+              window.location.href = "books.html";
+            } else {
+              const err = await response.json();
+              alert("Error adding book: " + (err.message || "Unknown error"));
+            }
+          } catch (err) {
+            console.error("Error adding book:", err);
+            alert("An error occurred while adding the book.");
+          }
+        });
+    </script>
+  </body>
+</html>

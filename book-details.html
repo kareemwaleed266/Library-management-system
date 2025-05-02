@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Book Details | LibraryMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+              alt="Logo"
+              class="h-10 w-10 mr-2"
+            />
+            <span class="font-bold text-xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex space-x-4">
+            <a
+              href="index.html"
+              class="text-gray-700 hover:text-blue-600 font-medium"
+              >Home</a
+            >
+            <button
+              onclick="logout()"
+              class="text-red-600 hover:text-red-800 font-medium"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-6 max-w-3xl mx-auto">
+      <div
+        id="bookDetails"
+        class="bg-white p-6 rounded-lg shadow-md w-96 max-w-xl mx-auto relative"
+      >
+        <!-- Content loaded dynamically -->
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white text-center py-4 shadow-inner">
+      <p class="text-gray-500 text-sm">
+        © 2025 LibraryMS. All rights reserved.
+      </p>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+      const isAdmin = localStorage.getItem("isAdmin") === "true";
+      if (!localStorage.getItem("accessToken")) {
+        alert("Unauthorized. Redirecting to login.");
+        window.location.href = "login.html";
+      }
+
+      function logout() {
+        window.location.href = "logout.html";
+      }
+
+      function parseJwt(token) {
+        try {
+          return JSON.parse(atob(token.split(".")[1]));
+        } catch {
+          return {};
+        }
+      }
+
+      async function loadBookDetails() {
+        const id = new URLSearchParams(location.search).get("id");
+        if (!id) return alert("No book ID provided.");
+
+        const res = await fetchWithAuth(
+          `http://libraryms.runasp.net/api/Book/GetBook/${id}`
+        );
+        if (!res.ok) return alert("Failed to load book.");
+        const book = await res.json();
+
+        // بناء البادج
+        let badge;
+        switch (book.bookStatus) {
+          case "Borrowed":
+            badge = `<span class="px-3 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full">Borrowed</span>`;
+            break;
+          case "SoldOut":
+            badge = `<span class="px-3 py-1 text-xs font-semibold bg-red-100 text-red-800 rounded-full">Sold</span>`;
+            break;
+          default:
+            badge = `<span class="px-3 py-1 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Available</span>`;
+        }
+
+        document.getElementById("bookDetails").innerHTML = `
+          <div class="flex items-center justify-center mb-6">
+            <img src="https://cdn-icons-png.flaticon.com/512/3145/3145765.png"
+                 alt="Logo" class="h-12 w-12 mr-3" />
+            <span class="font-bold text-3xl text-blue-600">LibraryMS</span>
+          </div>
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-gray-800">${book.title}</h1>
+            ${badge}
+          </div>
+          <p class="text-gray-600 mb-2"><strong>Author:</strong> ${
+            book.author
+          }</p>
+          <p class="text-gray-600 mb-2"><strong>Category:</strong> ${
+            book.categoryName
+          }</p>
+          <p class="text-gray-600 mb-2"><strong>Publisher:</strong> ${
+            book.publisherName
+          }</p>
+          <p class="text-gray-600 mb-6"><strong>Price:</strong> $${
+            book.price
+          }</p>
+
+          <div class="flex space-x-3 mb-6 ${isAdmin ? "" : "hidden"}">
+            <a href="update-book.html?id=${book.id}"
+               class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Edit</a>
+            <button onclick="deleteBook(${book.id})"
+               class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">Delete</button>
+          </div>
+
+          <div class="flex space-x-3 ${isAdmin ? "hidden" : ""}">
+            <button id="borrowBtn"
+               class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+               onclick="borrowBook('${book.id}')">Borrow</button>
+            <button id="buyBtn"
+               class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition"
+               onclick="buyBook('${book.id}')">Buy</button>
+          </div>
+        `;
+      }
+
+      async function deleteBook(id) {
+        if (!confirm("Delete this book?")) return;
+        const res = await fetchWithAuth(
+          `http://libraryms.runasp.net/api/Book/DeleteBook/${id}`,
+          { method: "DELETE" }
+        );
+        if (res.ok) window.location.href = "index.html";
+        else alert("Delete failed");
+      }
+
+      async function borrowBook(id) {
+        const email = parseJwt(localStorage.getItem("accessToken")).email;
+        if (!email) return alert("Not logged in");
+
+        const res = await fetchWithAuth(
+          `http://libraryms.runasp.net/api/Transaction/BorrowBook/${id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userEmail: email }),
+          }
+        );
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          document.getElementById("borrowBtn").textContent = "Borrowed";
+          alert(data.message);
+        } else {
+          alert(data.message);
+        }
+      }
+
+      async function buyBook(id) {
+        const email = parseJwt(localStorage.getItem("accessToken")).email;
+        if (!email) return alert("Not logged in");
+
+        const res = await fetchWithAuth(
+          `http://libraryms.runasp.net/api/Transaction/BuyBook/${id}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userEmail: email }),
+          }
+        );
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          document.getElementById("buyBtn").textContent = "Purchased";
+          alert(data.message);
+        } else {
+          alert(data.message);
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", loadBookDetails);
+    </script>
+  </body>
+</html>
