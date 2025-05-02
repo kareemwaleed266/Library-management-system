@@ -78,7 +78,7 @@
             const data = await response.json(); // اقرأ الرسالة من JSON
 
             if (response.ok) {
-              // localStorage.clear();
+              localStorage.clear();
               alert(data.message || "Logout successful."); // عرض الرسالة من السيرفر
               window.location.href = "login.html";
             } else {
