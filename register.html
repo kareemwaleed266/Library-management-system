@@ -111,7 +111,7 @@
             return;
           }
 
-          const payload = { username, email, password };
+          const payload = { userName, email, password };
           const res = await fetchWithAuth(
             "https://libraryms.runasp.net/api/Account/Register",
             {
