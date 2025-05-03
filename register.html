@@ -104,13 +104,6 @@
             return;
           }
 
-          // Simple email format validation
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            alert("Please enter a valid email");
-            return;
-          }
-
           const payload = { userName, email, password };
           const res = await fetchWithAuth(
             "https://libraryms.runasp.net/api/Account/Register",

@@ -70,26 +70,29 @@
       if (!accessToken) {
         alert("Unauthorized access. Redirecting to login...");
         window.location.href = "login.html";
-      } else {
-        fetchWithAuth("https://libraryms.runasp.net/api/Account/Logout", {
-          method: "POST",
-        })
-          .then(async (response) => {
-            const data = await response.json(); // اقرأ الرسالة من JSON
-
-            if (response.ok) {
-              localStorage.clear();
-              alert(data.message || "Logout successful."); // عرض الرسالة من السيرفر
-              window.location.href = "login.html";
-            } else {
-              alert(data.message || "Logout failed. Please try again.");
-            }
-          })
-          .catch((error) => {
-            console.error("Logout error:", error);
-            alert("Error during logout. Please check your connection.");
-          });
       }
+
+      fetchWithAuth("https://libraryms.runasp.net/api/Account/Logout", {
+        method: "POST",
+      })
+        .then(async (response) => {
+          console.log(response);
+
+          const data = await response.json(); // اقرأ الرسالة من JSON
+          console.log(data);
+
+          if (response.ok) {
+            localStorage.clear();
+            alert(data.message || "Logout successful."); // عرض الرسالة من السيرفر
+            window.location.href = "login.html";
+          } else {
+            alert(data.message || "Logout failed. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+          alert("Error during logout. Please check your connection.");
+        });
     </script>
   </body>
 </html>
