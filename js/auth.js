@@ -47,12 +47,12 @@ window.fetchWithAuth = fetchWithAuth;
 window.refreshAccessToken = refreshAccessToken;
 
 // تحديث تلقائي للتوكن كل 5 دقائق
-
-window.onload = () => {
+if (!window.tokenRefreshStarted) {
   const token = localStorage.getItem("accessToken");
   if (token) {
     setInterval(() => {
       refreshAccessToken();
-    }, 60 * 1000);
+    }, 60 * 1000); // كل ساعة
+    window.tokenRefreshStarted = true; // يمنع تشغيل تايمر تاني
   }
-};
+}
