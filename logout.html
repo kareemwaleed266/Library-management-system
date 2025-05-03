@@ -77,7 +77,10 @@
         try {
           const response = await fetchWithAuth(
             "https://libraryms.runasp.net/api/Account/logout",
-            { method: "POST", headers: { "Content-Type": "application/json" } }
+            {
+              method: "POST",
+              // لا تحتاج body أو content-type هنا
+            }
           );
 
           const data = await response.json();
