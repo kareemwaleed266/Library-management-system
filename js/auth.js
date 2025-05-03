@@ -49,4 +49,4 @@ window.refreshAccessToken = refreshAccessToken;
 // تحديث تلقائي للتوكن كل 5 دقائق
 setInterval(() => {
   refreshAccessToken();
-}, 60 * 60 * 1000);
+}, 60 * 1000);
