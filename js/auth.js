@@ -52,7 +52,7 @@ if (!window.tokenRefreshStarted) {
   if (token) {
     setInterval(() => {
       refreshAccessToken();
-    }, 60 * 1000); // كل ساعة
+    }, 60 * 60 * 1000); // كل ساعة
     window.tokenRefreshStarted = true; // يمنع تشغيل تايمر تاني
   }
 }
