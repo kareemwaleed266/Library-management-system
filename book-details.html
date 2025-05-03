@@ -83,7 +83,6 @@
         if (!res.ok) return alert("Failed to load book.");
         const book = await res.json();
 
-        // بناء البادج
         let badge;
         switch (book.bookStatus) {
           case "Borrowed":
@@ -164,7 +163,7 @@
 
         if (res.ok) {
           document.getElementById("borrowBtn").textContent = "Borrowed";
-          alert(data.message);
+          alert(data.message || "Book Borrowed Successfully");
         } else {
           alert(data.message);
         }
@@ -187,7 +186,7 @@
 
         if (res.ok) {
           document.getElementById("buyBtn").textContent = "Purchased";
-          alert(data.message);
+          alert(data.message || "Book Purchased Successfully");
         } else {
           alert(data.message);
         }
