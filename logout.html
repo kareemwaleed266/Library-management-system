@@ -65,34 +65,36 @@
   </script> -->
     <script src="js/auth.js"></script>
     <script>
-      const accessToken = localStorage.getItem("accessToken");
+      window.onload = async () => {
+        const accessToken = localStorage.getItem("accessToken");
 
-      if (!accessToken) {
-        alert("Unauthorized access. Redirecting to login...");
-        window.location.href = "login.html";
-      }
+        if (!accessToken) {
+          alert("Unauthorized access. Redirecting to login...");
+          window.location.href = "login.html";
+          return;
+        }
 
-      fetchWithAuth("https://libraryms.runasp.net/api/Account/logout", {
-        method: "POST",
-      })
-        .then(async (response) => {
-          console.log(response);
+        try {
+          const response = await fetchWithAuth(
+            "https://libraryms.runasp.net/api/Account/logout",
+            { method: "POST", headers: { "Content-Type": "application/json" } }
+          );
 
-          const data = await response.json(); // اقرأ الرسالة من JSON
+          const data = await response.json();
           console.log(data);
 
           if (response.ok) {
             localStorage.clear();
-            alert(data.message || "Logout successful."); // عرض الرسالة من السيرفر
+            alert(data.message || "Logout successful.");
             window.location.href = "login.html";
           } else {
             alert(data.message || "Logout failed. Please try again.");
           }
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error("Logout error:", error);
           alert("Error during logout. Please check your connection.");
-        });
+        }
+      };
     </script>
   </body>
 </html>
